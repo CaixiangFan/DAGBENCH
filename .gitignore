@@ -34,3 +34,6 @@ dist/**/*
 coverage/**/*
 
 config_*.ini*
+/workload/valuetransfer/report/
+/workload/query/report/
+.vscode/

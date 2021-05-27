@@ -16,6 +16,11 @@ class DAG {
             this.dagType = 'iota';
             this.dagObj = new iota(configPath);
          }
+         else if (config.type === 'tangle') {
+            let tangle = require('./tangle/tangle.js');
+            this.dagType = 'tangle';
+            this.dagObj = new tangle(configPath);
+         }
          else if (config.type === 'nano') {
             let nano = require('./nano/nano.js');
             this.dagType = 'nano';

@@ -62,7 +62,7 @@ class ValueTransfer extends WorkloadInterface {
                if (num === Number(client_num)) {
                   Util.log(`### ${this.workType} success! ###`);
                   this.data = { balance, transactions, latency, times };
-                  resolve();
+                  resolve(this.data);
                }
             });
 

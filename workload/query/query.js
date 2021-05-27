@@ -22,13 +22,13 @@ class Query extends WorkloadInterface {
       }
 
       this.clientArgs = clientArgs;
+      // console.log(this.clientArgs)
       return;
    }
 
    async preloadData() {
       // senders transfer money to receiver
       const transferIn = this.clientArgs.block_length;
-
       for (let i = 0; i < transferIn; i++) {
          await this.dag.sendAsync(this.clientArgs.nodes[0], this.clientArgs.senders, i, this.clientArgs.receiver);
       }
