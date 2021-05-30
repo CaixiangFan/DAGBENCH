@@ -11,7 +11,6 @@ const exec = util.promisify(require('child_process').exec);
 
 const DAGInterface = require('../DAG-Interface.js');
 const myUtil = require('../../util/util.js');
-
 class Tangle extends DAGInterface {
 
    constructor(config_path) {
@@ -57,13 +56,13 @@ class Tangle extends DAGInterface {
    }
 
    async send(node, sender, send_times, receiver) {
-      let send = sender;
-      if (send_times === 0 || send_times) {
-         send = sender[send_times];
-      }
-
-      console.log("node: ",node)
-
+      // let send = sender;
+      // if (send_times === 0 || send_times) {
+      //    send = sender[send_times];
+      // }
+      let idx = send_times % sender.length
+      let send = sender[idx]
+      
       const tangle = core.composeAPI({ provider: node });
       tangle.sendTrytes(send, 3, 9)
          .catch(error => {
@@ -188,7 +187,7 @@ class Tangle extends DAGInterface {
       for (let i = 0; i < this.config.sender_num; i++) {
          if (i === this.config.sender_num - 1) sender_group.push(senders);
          else sender_group.push(senders.splice(0, shardNum));
-      }
+      }      
       return sender_group;
    }
 

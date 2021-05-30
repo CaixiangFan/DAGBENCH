@@ -1,30 +1,31 @@
 {
-   "type": "tangle",
-   "work":"valuetransfer",
-   "duration": 20,
-   "tx_rate": 0.4,
-   "sender_num": 3,
-   "node_url": [
-      "10.2.8.177:14265",
-      "10.2.8.103:14265",
-      "10.2.6.116:14265"
-   ],
-   "query_ip": "10.2.8.177",
-   "query_port": "14265",
-   "query_times": 10,
-   "receiver": "VEMEG9EZGAVAEXLAPEFJ9KJDHDDNHPNS9OGMCHDGXGRDLHNZ9YGFMQ9ZYDAZJZKIMZIOPXPNIKBQDCLLY",
-   "coo_interval": 60,
-   "payload": {
-      "TimeStamp": "1538837575055",
-      "Tempreture": "20",
-      "Pressure": "40",
-      "Relative_humidity": "30%",
-      "Parent": "ZCGADNWAWXODJMXCEMOLBFKVBYLZGWP9XPDFTRXGYXMULQRVMGYIMGBRKCFIVXQW9MNIWYOHMYLFDFDJZDPUCODZRW",
-      "Location": {
-         "N": "39.9042",
-         "E": "116.4074"
-      },
-      "Illumination": "50",
-      "IP": "13.211.191.30"
-   }
+	"type": "tangle",
+	"work": "valuetransfer",
+	"duration": 20,
+	"tx_rate": 5,
+	"sender_num": 3,
+	"node_url": [
+		"10.2.8.177:14265",
+		"10.2.8.103:14265",
+		"10.2.6.116:14265"
+	],
+	"query_ip": "10.2.8.177",
+	"query_port": "14265",
+	"query_times": 10,
+	"seed": "TMVBDHKGYPDVVEJHBAW9CIFNNMYX9EFJIYRMGCCNQMUKH9IIY9NMQFYEJIMYEQQ9WGGVHHVH9INKWIVDE",
+	"receiver": "NEFTGRSQ9HWENTFXCXYVTZQAARWXRHIPGSXJAPHXSNDTBJXHGWFFTP9IDDVAJV9FYFNNEUSGDLXBEPUWD",
+	"coo_interval": 60,
+	"payload": {
+		"TimeStamp": "1538837575055",
+		"Tempreture": "20",
+		"Pressure": "40",
+		"Relative_humidity": "30%",
+		"Parent": "ZCGADNWAWXODJMXCEMOLBFKVBYLZGWP9XPDFTRXGYXMULQRVMGYIMGBRKCFIVXQW9MNIWYOHMYLFDFDJZDPUCODZRW",
+		"Location": {
+			"N": "39.9042",
+			"E": "116.4074"
+		},
+		"Illumination": "50",
+		"IP": "13.211.191.30"
+	}
 }

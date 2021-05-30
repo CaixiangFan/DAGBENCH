@@ -6,6 +6,10 @@ const childProcess = require('child_process');
 const WorkloadInterface = require('../workload-interface.js');
 const Util = require('../../util/util.js');
 const ClientArg = require('./clientArg.js');
+process.on('unhandledRejection', (reason, promise) => {
+   console.log('Unhandled Rejection at:', promise, 'reason:', reason);
+   // Application specific logging, throwing an error, or other logic here
+ });
 class ValueTransfer extends WorkloadInterface {
 
    constructor(configPath, dag) {
@@ -54,6 +58,9 @@ class ValueTransfer extends WorkloadInterface {
             else client.send({ order: i, id: 'GROUP', arg: this.clientArgs, dagPath: this.configPath });
 
             client.on('message', (m) => {
+
+               console.log("message from childprocess: ",m)
+
                balance = m.balance || balance;
                transactions = m.transactions || transactions;
                latency = m.latency || latency;

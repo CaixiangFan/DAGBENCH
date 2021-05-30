@@ -1,5 +1,4 @@
 const Util = require('../../util/util.js');
-
 class Operation {
    constructor(dagObj, clientArgs) {
       this.dagObj = dagObj;
