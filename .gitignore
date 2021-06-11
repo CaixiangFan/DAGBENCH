@@ -37,3 +37,4 @@ config_*.ini*
 /workload/valuetransfer/report/
 /workload/query/report/
 .vscode/
+network/tangle/data/*.txt

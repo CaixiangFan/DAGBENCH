@@ -23,7 +23,10 @@ class ValueTransfer extends WorkloadInterface {
       this.config = require(this.configPath);
 
       const nodes = await this.dag.generateNodes();
+      var start = new Date().getTime()
       const senders = await this.dag.generateSenders();
+      var end = new Date().getTime()
+      console.log('### preparation time: ' + (end - start)/1000 + ' s ###')
       const sender_group = await this.dag.generateSenderGroup(senders);
       const senders_one = await this.dag.generateOne();
       const receiver = await this.dag.generateReceiver();
@@ -59,7 +62,7 @@ class ValueTransfer extends WorkloadInterface {
 
             client.on('message', (m) => {
 
-               console.log("message from childprocess: ",m)
+               console.log(`message from childprocess ${client.pid}: `, m)
 
                balance = m.balance || balance;
                transactions = m.transactions || transactions;

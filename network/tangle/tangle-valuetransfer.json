@@ -1,8 +1,8 @@
 {
 	"type": "tangle",
 	"work": "valuetransfer",
-	"duration": 20,
-	"tx_rate": 5,
+	"duration": 120,
+	"tx_rate": 1,
 	"sender_num": 3,
 	"node_url": [
 		"10.2.8.177:14265",
