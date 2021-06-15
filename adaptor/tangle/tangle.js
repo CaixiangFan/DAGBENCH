@@ -195,7 +195,12 @@ class Tangle extends DAGInterface {
          const senders = [];
          const seedsText = fs.readFileSync(`./network/tangle/data/seed.txt`, "utf-8");
          const seedsArr = seedsText.split("\n");
-         const seedsNum = seedsArr.length
+         //remove all empty row and seed longer than 81 chars
+         seedsArr.forEach(seed => {
+            if (seed === '' || seed.length > 81) {
+               seedsArr.splice(seedsArr.indexOf(seed), 1)
+            }
+         })
          const clientDir = path.join(__dirname, '../../network/tangle/');
          const clientPath = path.join(clientDir, `prepareTx.js`);
          // const wstream = fs.createWriteStream(`./network/tangle/data/tryte.txt`);
