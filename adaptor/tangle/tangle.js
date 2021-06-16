@@ -62,10 +62,6 @@ class Tangle extends DAGInterface {
    }
 
    async send(node, sender, send_times, receiver) {
-      // let send = sender;
-      // if (send_times === 0 || send_times) {
-      //    send = sender[send_times];
-      // }
       let idx = send_times % sender.length
       let send = sender[idx]
       
@@ -85,11 +81,8 @@ class Tangle extends DAGInterface {
       }
    }
 
-   async sendAndWait(node, sender, send_times, receiver) {
-      let send = sender;
-      if (send_times === 0 || send_times) {
-         send = sender[send_times];
-      }
+   async sendAndWait(node, seeds, send_times, receiver) {
+      let seed = seeds[send_times]
       try {
          const tangle = core.composeAPI({ provider: node });
          const sendTime = { "sendTimestamp": new Date().getTime() }
@@ -99,7 +92,7 @@ class Tangle extends DAGInterface {
             message: conventer.asciiToTrytes(JSON.stringify(sendTime))
          }]
 
-         const trytes = await tangle.prepareTransfers(send, transfers);
+         const trytes = await tangle.prepareTransfers(seed, transfers);
          const bundle = await tangle.sendTrytes(trytes, 3, 9);
          const msg = JSON.parse(extract.extractJson(bundle));
          const lag = bundle[0].attachmentTimestamp - msg.sendTimestamp;
@@ -158,35 +151,6 @@ class Tangle extends DAGInterface {
       return nodes;
    }
 
-   // async generateSenders() {
-   //    // prepare transfers and return a list of trytes, e.g., [tx1,tx2,tx3,tx4,tx5,tx6]
-   //    myUtil.log('### tangle generate senders start ###');
-   //    const senders = [];
-   //    const tangle = core.composeAPI({
-   //       provider: `http://${this.config.node_url[0]}`
-   //    });
-   //    const transfers = [{
-   //       address: this.config.receiver,
-   //       value: 1,
-   //       message: conventer.asciiToTrytes(JSON.stringify(this.config.payload))
-   //    }];
-
-   //    const seedsText = fs.readFileSync(`./network/tangle/data/seed.txt`, "utf-8");
-   //    const seedsArr = seedsText.split("\n");
-
-   //    const wstream = fs.createWriteStream(`./network/tangle/data/tryte.txt`);
-   //    for (let seed of seedsArr) {
-   //       const tryte = await tangle.prepareTransfers(seed, transfers);
-   //       senders.push(tryte);
-   //       wstream.write(tryte + "\n");
-   //    }
-   //    wstream.end();
-   //    myUtil.log('### tangle write trytes finish ###');
-
-   //    myUtil.log('### tangle generate senders finish ###');
-
-   //    return senders;
-   // }
 
    async generateSenders() {
       // prepare transfers and return a list of trytes, e.g., [tx1,tx2,tx3,tx4,tx5,tx6]
@@ -202,7 +166,7 @@ class Tangle extends DAGInterface {
             }
          })
          const clientDir = path.join(__dirname, '../../network/tangle/');
-         const clientPath = path.join(clientDir, `prepareTx.js`);
+         const clientPath = path.join(clientDir, `prepare-tx.js`);
          // const wstream = fs.createWriteStream(`./network/tangle/data/tryte.txt`);
    
          const node_urls = []
@@ -223,9 +187,9 @@ class Tangle extends DAGInterface {
             const client = childProcess.fork(clientPath)
             client.send({receiver: receiver, node_url: node_url, seeds: seed_list})
             client.on('message', (m) => {
-               m.forEach((value) => {senders.push(value)})
+               m.data.forEach((value) => {senders.push(value)})
                txNum++
-               console.log("tx num from ", client.pid, ": ", m.length)
+               console.log(`tx num from ${client.pid} (${m.node}): ${m.data.length}`)
                if (txNum === client_num) {
                   resolve(senders)
                   console.log(`### Successfully resolved senders ###`)
@@ -251,6 +215,12 @@ class Tangle extends DAGInterface {
    generateOne() {
       const seed_one_st = fs.readFileSync(`./network/tangle/data/seed_one.txt`, "utf-8");
       const senders_one = seed_one_st.split("\n");
+      //remove all empty row and seed longer than 81 chars
+      senders_one.forEach(seed => {
+         if (seed === '' || seed.length > 81) {
+            senders_one.splice(senders_one.indexOf(seed), 1)
+         }
+      })
       return senders_one;
    }
 

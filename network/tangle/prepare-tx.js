@@ -23,7 +23,7 @@ async function prep_transactions(seeds, provider, receiver){
 process.on('message', async (m) => {
     let result
     result = await prep_transactions(m.seeds, m.node_url, m.receiver)
-    process.send(result)
+    process.send({data: result, node: m.node_url})
     setTimeout(() => {
         process.disconnect()
     }, 2000)

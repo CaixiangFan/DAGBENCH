@@ -8,11 +8,11 @@ const configPath = path.join(dagBenchDir, `tangle-valuetransfer.json`);
 const config = require(configPath);
 const tangle = core.composeAPI({ provider: `http://${config.query_ip}:14265`});
 
-async function distributeIOTA(seedNum, value){
+async function distributeIOTA(seedfile, seedNum, value){
     let seed
     let address
     const initSeed = "YGCOACXP9SCGRWZBXLMIINVDFSDHKKIFCPNWYQGX9VRMM99VCHXFTNLELCHNJQTLTFTXRZBGEKUUGOPM9"
-    const wstream = fs.createWriteStream('../network/tangle/data/seed.txt', {flags: 'a'})
+    const wstream = fs.createWriteStream(`../network/tangle/data/${seedfile}`, {flags: 'a'})
     for (let i=0; i<seedNum; i++){
         seed = iotaseed()
         address = await tangle.getNewAddress(seed)
@@ -67,13 +67,13 @@ function run(){
         getInputs(seedfile)
     } 
     else if (cmd === 'distributeiota') {
-        distributeIOTA(seednum, value)
+        distributeIOTA(seedfile, seednum, value)
     }
     else if (cmd === 'updatereceiver') {
         updateReceiverAddress()
     }
     else {
-        console.log("Usage: node prerun --cmd distributeiota --seednum 100 --value 1000000")
+        console.log("Usage: node prerun --cmd distributeiota|getinputs --seedfile seed.txt --seednum 100 --value 1000000")
     }
 
 }
