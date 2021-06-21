@@ -30,6 +30,8 @@ class Operation {
    async transferOne() {
       let send_times = 0;
       const latency = [];
+      const prepare_time = []
+      const send_time = []
       const nodes = this.clientArgs.nodes;
       const senders_one = this.clientArgs.senders_one;
       const duration = this.clientArgs.duration;
@@ -40,11 +42,16 @@ class Operation {
          await Util.sleep(duration * 1000 * 0.1);
 
          const node = nodes[send_times % nodes.length];
-         const lag = await this.dagObj.sendAndWait(node, senders_one, send_times, this.clientArgs.receiver);
-         if (lag) latency.push(lag);
+         const sent = await this.dagObj.sendAndWait(node, senders_one, send_times, this.clientArgs.receiver);
+         if (sent) {
+            latency.push(sent.lag);
+            prepare_time.push(sent.prep_time);
+            send_time.push(sent.send_time)
+         }
+
          send_times++;
       }
-      return { latency, send_times, message: 'ONE' };
+      return { latency, prepare_time, send_time, send_times, message: 'ONE' };
 
    }
 

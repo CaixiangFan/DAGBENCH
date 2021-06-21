@@ -2,7 +2,7 @@
 
 const path = require('path');
 const childProcess = require('child_process');
-
+const fs = require('fs')
 const WorkloadInterface = require('../workload-interface.js');
 const Util = require('../../util/util.js');
 const ClientArg = require('./clientArg.js');
@@ -63,7 +63,18 @@ class ValueTransfer extends WorkloadInterface {
             client.on('message', (m) => {
 
                console.log(`message from childprocess ${client.pid}: `, m)
-
+               if (m.message === 'ONE'){
+                  const rate = Number(this.config.tx_rate) * Number(this.config.sender_num)
+                  const filepath = `/valuetransfer/report/timer-${rate}.json`
+                  const storeData = (data, path) => {
+                     try {
+                       fs.writeFileSync(path, JSON.stringify(data,null,"\t"))
+                     } catch (err) {
+                       console.error(err)
+                     }
+                   }
+                  storeData(m,filepath)
+               }
                balance = m.balance || balance;
                transactions = m.transactions || transactions;
                latency = m.latency || latency;
@@ -102,7 +113,8 @@ class ValueTransfer extends WorkloadInterface {
    async generateThroughput(net, transactions, balance, times, nodes, senders, duration) {
 
       const timestamp = new Date().toString().substring(4, 24);
-      const path = `./workload/valuetransfer/report/${net}-throughput-${timestamp}.csv`;
+      const rps = Number(this.config.tx_rate) * Number(this.config.sender_num)
+      const path = `./workload/valuetransfer/report/${net}-throughput-${rps}-${timestamp}.csv`;
       const header = await this.dag.throughtputHeader();
       const records = await this.dag.throughtputRecords(transactions, balance, times, nodes, senders, duration);
 
@@ -116,7 +128,8 @@ class ValueTransfer extends WorkloadInterface {
       const rate = times / duration;
 
       const timestamp = new Date().toString().substring(4, 24);
-      const path = `./workload/valuetransfer/report/${net}-latency-${timestamp}.csv`;
+      const rps = Number(this.config.tx_rate) * Number(this.config.sender_num)
+      const path = `./workload/valuetransfer/report/${net}-latency-${rps}-${timestamp}.csv`;
       const header = [
          { id: 'nodes', title: 'NODE' },
          { id: 'client', title: 'CLIENT' },

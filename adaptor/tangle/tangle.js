@@ -92,12 +92,16 @@ class Tangle extends DAGInterface {
             message: conventer.asciiToTrytes(JSON.stringify(sendTime))
          }]
 
+         const prep_start = new Date().getTime()
          const trytes = await tangle.prepareTransfers(seed, transfers);
+         const prep_time = (new Date().getTime() - prep_start)/1000
+         const send_start = new Date().getTime()
          const bundle = await tangle.sendTrytes(trytes, 3, 9);
+         const send_time = (new Date().getTime() - send_start)/1000
          const msg = JSON.parse(extract.extractJson(bundle));
-         const lag = bundle[0].attachmentTimestamp - msg.sendTimestamp;
+         const lag = (bundle[0].attachmentTimestamp - msg.sendTimestamp)/1000;
 
-         return lag / 1000;
+         return {lag, prep_time, send_time}
       } catch (error) {
          myUtil.error(`tangle sendAndWait error: ${error}`);
          return null;
